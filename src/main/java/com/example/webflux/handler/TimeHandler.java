@@ -1,4 +1,4 @@
-package com.example.webflux.Handler;
+package com.example.webflux.handler;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

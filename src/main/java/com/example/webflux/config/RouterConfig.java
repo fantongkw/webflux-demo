@@ -1,6 +1,6 @@
-package com.example.webflux.Config;
+package com.example.webflux.config;
 
-import com.example.webflux.Handler.TimeHandler;
+import com.example.webflux.handler.TimeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,4 +26,5 @@ public class RouterConfig {
                 .andRoute(GET("/date"), timeHandler::getDate)
                 .andRoute(GET("/times"), timeHandler::sendTimePerSec);
     }
+
 }
