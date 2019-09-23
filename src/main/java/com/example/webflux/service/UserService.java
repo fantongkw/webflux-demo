@@ -4,6 +4,7 @@ import com.example.webflux.dao.UserDao;
 import com.example.webflux.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -11,7 +12,6 @@ public class UserService {
 
     private final UserDao userDao;
 
-    @Autowired
     public UserService(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -24,6 +24,10 @@ public class UserService {
                                     user.setId(originalUser);
                                     return userDao.save(user);
                                 }));
+    }
+
+    public Flux<String> findAll() {
+        return userDao.findAll();
     }
 
     public Mono<String> findById(String s) {

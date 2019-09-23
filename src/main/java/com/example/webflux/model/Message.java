@@ -6,18 +6,12 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash("user")
-public class User {
+@RedisHash("message")
+public class Message {
     @Id
     private String id;
-    private String username;
-    private String phone;
-    private String email;
-    private String name;
-    private Date birthday;
+    private String content;
 }

@@ -6,7 +6,9 @@ import lombok.Data;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.reactivestreams.Subscription;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,8 +19,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BinaryOperator;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
 
 @RunWith(SpringRunner.class)
 public class ReactorTests {
@@ -110,13 +110,29 @@ public class ReactorTests {
     }
 
     @Test
-    public void testStack() {
-        Stack<Integer> stack = new Stack<>();
-        stack.push(1);
-        stack.push(2);
-        stack.push(3);
-        stack.pop();
-        stack.peek();
-        System.out.println(stack.empty());
+    public void webClientTest(){
+        WebClient webClient = WebClient.create("http://localhost:8080");   // 1
+        Mono<String> resp = webClient
+                .get().uri("/hello") // 2
+                .retrieve() // 3
+                .bodyToMono(String.class);  // 4
+        resp.subscribe(System.out::println);    // 5
+        try {
+            TimeUnit.SECONDS.sleep(1);  // 6
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void webClientTest2() {
+        WebClient webClient = WebClient.builder().baseUrl("http://localhost:8080").build(); // 1
+        webClient
+                .get().uri("/user")
+                .accept(MediaType.APPLICATION_STREAM_JSON) // 2
+                .exchange() // 3
+                .flatMapMany(response -> response.bodyToFlux(User.class))   // 4
+                .doOnNext(System.out::println)  // 5
+                .blockLast();   // 6
     }
 }
